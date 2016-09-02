@@ -1,8 +1,8 @@
 import sys
 import requests
 
-def getEnvironment(rancherUrl, environmentName):
-    response = requests.get('http://'+rancherUrl+'/v1/projects')
+def getEnvironment(rancherUrl, environmentName, user, secret):
+    response = requests.get(rancherUrl+'/v1/projects', auth=(user, secret))
     data = response.json()
 
     environment_instance=None
@@ -12,9 +12,9 @@ def getEnvironment(rancherUrl, environmentName):
     
     return environment_instance
 
-def getStack(rancherUrl, environmentId, stackName):
-    request = 'http://'+rancherUrl+'/v1/projects/'+environmentId+'/environments?name='+stackName+'&limit=1'
-    response = requests.get(request)
+def getStack(rancherUrl, environmentId, stackName, user, secret):
+    request = rancherUrl+'/v1/projects/'+environmentId+'/environments?name='+stackName+'&limit=1'
+    response = requests.get(request, auth=(user, secret))
     data = response.json()
     stack_instance=None
     for stack in data["data"]:
@@ -22,9 +22,9 @@ def getStack(rancherUrl, environmentId, stackName):
             stack_instance=stack
     return stack_instance
 
-def getService(rancherUrl, environmentId, serviceName):
-    request = 'http://'+rancherUrl+'/v1/projects/'+environmentId+'/services?name='+serviceName+'&limit=1'
-    response = requests.get(request)
+def getService(rancherUrl, environmentId, serviceName, user, secret):
+    request = rancherUrl+'/v1/projects/'+environmentId+'/services?name='+serviceName+'&limit=1'
+    response = requests.get(request, auth=(user, secret))
     data = response.json()
     service_instance=None
     for service in data["data"]:
@@ -32,7 +32,7 @@ def getService(rancherUrl, environmentId, serviceName):
             service_instance=service
     return service_instance
 
-def updateService(rancherUrl, environmentId, serviceId, updatedService):
-    request = 'http://'+rancherUrl+'/v1/projects/'+environmentId+'/services/'+serviceId
-    response = requests.put(request, data=updatedService)
+def updateService(rancherUrl, environmentId, serviceId, updatedService, user, secret):
+    request = rancherUrl+'/v1/projects/'+environmentId+'/services/'+serviceId
+    response = requests.put(request, data=updatedService, auth=(user, secret))
     response.raise_for_status()
