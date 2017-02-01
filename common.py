@@ -36,3 +36,8 @@ def updateService(rancherUrl, environmentId, serviceId, updatedService, user, se
     request = rancherUrl+'/v1/projects/'+environmentId+'/services/'+serviceId
     response = requests.put(request, data=updatedService, auth=(user, secret))
     response.raise_for_status()
+
+def getContainerInstance(rancherUrl, environmentId, serviceId, instanceIndex, user, secret):
+    response = requests.get(rancherUrl+'/v1/projects/'+environmentId+'/services/'+serviceId+'/instances', auth=(user, secret))
+    response.raise_for_status()
+    return response.json()["data"][instanceIndex]["id"]
